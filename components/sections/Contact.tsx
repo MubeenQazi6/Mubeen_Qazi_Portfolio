@@ -179,6 +179,19 @@ export function Contact() {
                 </li>
                 <li>
                   <span className="block text-xs uppercase tracking-wider text-accent">
+                    WhatsApp
+                  </span>
+                  <Link
+                    href={personal.whatsApp}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-foreground transition-colors hover:text-accent"
+                  >
+                    Chat on WhatsApp
+                  </Link>
+                </li>
+                <li>
+                  <span className="block text-xs uppercase tracking-wider text-accent">
                     LinkedIn
                   </span>
                   <Link

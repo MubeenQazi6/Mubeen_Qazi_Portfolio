@@ -1,6 +1,7 @@
 import { seo } from "@/content/portfolio";
 import type { Metadata } from "next";
 import { Inter, Poppins } from "next/font/google";
+import { WhatsAppButton } from "@/components/ui/WhatsAppButton";
 import "./globals.css";
 
 const inter = Inter({
@@ -50,6 +51,7 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} ${poppins.variable} scroll-smooth`}>
       <body className="min-h-screen bg-background font-sans text-foreground antialiased">
         {children}
+        <WhatsAppButton />
       </body>
     </html>
   );

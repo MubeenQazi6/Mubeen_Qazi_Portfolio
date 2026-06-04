@@ -4,6 +4,7 @@ export const personal = {
   location: "Hyderabad, Pakistan",
   email: "mubeenqazi707@gmail.com",
   phone: "+92 312 3001579",
+  whatsApp: "https://wa.me/923123001579",
   linkedIn: "https://linkedin.com/in/mubeen-qazi",
   subtitle: "Fintech | API Testing | Laravel | Automation Testing",
   resumePath: "/Mubeen-Qazi-Resume.pdf",
