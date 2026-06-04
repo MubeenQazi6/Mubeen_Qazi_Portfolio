@@ -44,11 +44,18 @@ export function Navbar() {
       >
         <Link
           href="#home"
-          className="font-display text-lg font-semibold tracking-tight text-foreground"
+          className="group relative flex items-center gap-2"
           onClick={() => setOpen(false)}
         >
-          {personal.name.split(" ")[0]}
-          <span className="text-accent">.</span>
+          {/* Gradient border glow container */}
+          <span className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-accent via-[#8b5cf6] to-accent shadow-lg shadow-accent/20 transition-shadow duration-300 group-hover:shadow-accent/40">
+            <span className="font-display text-lg font-bold tracking-tight text-background">
+              MQ
+            </span>
+          </span>
+          <span className="hidden font-display text-sm font-medium tracking-wide text-muted transition-colors group-hover:text-foreground sm:block">
+            Mubeen<span className="text-accent">.</span>Qazi
+          </span>
         </Link>
 
         <ul className="hidden items-center gap-8 md:flex">
