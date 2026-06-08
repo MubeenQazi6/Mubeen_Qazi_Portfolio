@@ -17,129 +17,87 @@ export type MatchResult = {
   }[];
   roleFit: "qa" | "development" | "hybrid";
   summary: string;
+  source?: "ai" | "fallback";
+};
+
+type AiMatchPayload = {
+  matchPercent?: number;
+  matchedSkills?: string[];
+  missingSkills?: string[];
+  relevantProjects?: { name?: string; reason?: string }[];
+  relevantExperience?: { title?: string; company?: string }[];
+  roleFit?: string;
+  summary?: string;
 };
 
 function normalize(text: string): string {
   return text.toLowerCase().replace(/[^\w\s+#.]/g, " ").replace(/\s+/g, " ").trim();
 }
 
-function countKeywordHits(text: string, keywords: readonly string[]): number {
-  let hits = 0;
-  for (const keyword of keywords) {
-    if (text.includes(keyword)) hits++;
-  }
-  return hits;
+function clampPercent(value: unknown): number {
+  const num = typeof value === "number" ? value : Number(value);
+  if (!Number.isFinite(num)) return 0;
+  return Math.min(98, Math.max(0, Math.round(num)));
 }
 
-function extractJdSkills(jd: string): string[] {
-  const found: string[] = [];
-  for (const skill of jobMatchProfile.skills) {
-    const score = countKeywordHits(jd, skill.keywords);
-    if (score > 0) found.push(skill.name);
-  }
-  return found;
+function asStringArray(value: unknown): string[] {
+  if (!Array.isArray(value)) return [];
+  return value
+    .filter((item): item is string => typeof item === "string")
+    .map((s) => s.trim())
+    .filter(Boolean)
+    .slice(0, 12);
 }
 
-function getCandidateSkills(): Set<string> {
-  return new Set(jobMatchProfile.skills.map((s) => s.name));
+function enrichProjectUrl(name: string): string | undefined {
+  const normalized = name.toLowerCase();
+  return projects.find((p) => {
+    const projectName = p.name.toLowerCase();
+    const shortName = projectName.split("—")[0].trim();
+    return normalized === projectName || normalized.includes(shortName) || projectName.includes(normalized);
+  })?.url;
 }
 
-function scoreProjects(jd: string) {
-  return projects
-    .map((project) => {
-      const text = normalize(
-        [project.name, project.category, ...project.highlights, ...project.skills].join(" "),
-      );
-      let score = 0;
-      const reasons: string[] = [];
+export function parseAiMatchResult(payload: AiMatchPayload): MatchResult {
+  const roleFitRaw = payload.roleFit?.toLowerCase();
+  const roleFit: MatchResult["roleFit"] =
+    roleFitRaw === "qa" || roleFitRaw === "development" || roleFitRaw === "hybrid"
+      ? roleFitRaw
+      : "hybrid";
 
-      for (const skill of project.skills) {
-        if (jd.includes(skill)) {
-          score += skill.length > 8 ? 3 : 2;
-        }
-      }
+  const relevantProjects = (payload.relevantProjects ?? [])
+    .filter((p) => p.name && p.reason)
+    .slice(0, 4)
+    .map((p, index) => ({
+      name: p.name!.trim(),
+      reason: p.reason!.trim(),
+      relevance: 100 - index * 10,
+      url: enrichProjectUrl(p.name!.trim()),
+    }));
 
-      if (jd.includes("fintech") || jd.includes("payment")) {
-        if (project.name.toLowerCase().includes("namipay")) {
-          score += 8;
-          reasons.push("Direct fintech/payment platform experience");
-        }
-      }
-      if (jd.includes("government") || jd.includes("public sector")) {
-        if (project.name.toLowerCase().includes("sspa")) {
-          score += 8;
-          reasons.push("Government digital platform QA experience");
-        }
-      }
-      if (jd.includes("laravel") || jd.includes("php")) {
-        if (project.category.toLowerCase().includes("laravel") || project.category.toLowerCase().includes("php")) {
-          score += 6;
-          reasons.push("Hands-on Laravel/PHP development");
-        }
-      }
-      if (jd.includes("api") || jd.includes("rest")) {
-        if (project.role === "qa" || project.role === "both") {
-          score += 4;
-          reasons.push("API testing and validation experience");
-        }
-      }
+  const relevantExperience = (payload.relevantExperience ?? [])
+    .filter((e) => e.title && e.company)
+    .slice(0, 4)
+    .map((e, index) => ({
+      title: e.title!.trim(),
+      company: e.company!.trim(),
+      relevance: 100 - index * 10,
+    }));
 
-      const reason =
-        reasons.length > 0
-          ? reasons[0]
-          : project.role === "qa"
-            ? "QA work aligns with testing requirements"
-            : "Development background supports technical understanding";
-
-      return { name: project.name, relevance: score, reason, url: project.url };
-    })
-    .filter((p) => p.relevance > 0)
-    .sort((a, b) => b.relevance - a.relevance)
-    .slice(0, 3);
+  return {
+    matchPercent: clampPercent(payload.matchPercent),
+    matchedSkills: asStringArray(payload.matchedSkills),
+    missingSkills: asStringArray(payload.missingSkills),
+    relevantProjects,
+    relevantExperience,
+    roleFit,
+    summary: typeof payload.summary === "string" ? payload.summary.trim() : "",
+    source: "ai",
+  };
 }
 
-function scoreExperience(jd: string) {
-  return experience
-    .map((item) => {
-      const text = normalize(
-        [item.title, item.company, ...item.highlights].join(" "),
-      );
-      let score = 0;
-
-      for (const exp of jobMatchProfile.experienceKeywords) {
-        const roleMentioned = exp.keywords.some((k) => jd.includes(k));
-        const hasOverlap = exp.keywords.some((k) => text.includes(k));
-        if (roleMentioned && hasOverlap) score += 5;
-      }
-
-      for (const skill of jobMatchProfile.skills) {
-        const jdHas = skill.keywords.some((k) => jd.includes(k));
-        const expHas = skill.keywords.some((k) => text.includes(k));
-        if (jdHas && expHas) score += 3;
-      }
-
-      if (item.current && (jd.includes("qa") || jd.includes("test"))) score += 4;
-
-      return { title: item.title, company: item.company, relevance: score };
-    })
-    .filter((e) => e.relevance > 0)
-    .sort((a, b) => b.relevance - a.relevance)
-    .slice(0, 3);
-}
-
-function detectRoleFit(jd: string): "qa" | "development" | "hybrid" {
-  const qaScore = countKeywordHits(jd, [
-    "qa", "quality assurance", "tester", "testing", "sqa", "manual test", "automation test",
-  ]);
-  const devScore = countKeywordHits(jd, [
-    "developer", "development", "engineer", "laravel", "php", "full stack", "backend", "frontend", "programming",
-  ]);
-  if (qaScore > devScore + 2) return "qa";
-  if (devScore > qaScore + 2) return "development";
-  return "hybrid";
-}
-
-export function analyzeJobDescription(rawJd: string): MatchResult {
+/** Offline fallback when AI is unavailable */
+export function analyzeJobDescriptionFallback(rawJd: string): MatchResult {
   const jd = normalize(rawJd);
 
   if (jd.length < 30) {
@@ -151,54 +109,54 @@ export function analyzeJobDescription(rawJd: string): MatchResult {
       relevantExperience: [],
       roleFit: "hybrid",
       summary: "Please paste a fuller job description (at least a few lines) for an accurate match analysis.",
+      source: "fallback",
     };
   }
 
-  const jdSkills = extractJdSkills(jd);
-  const candidateSkills = getCandidateSkills();
+  const jdSkills: string[] = [];
+  for (const skill of jobMatchProfile.skills) {
+    if (skill.keywords.some((k) => jd.includes(k))) jdSkills.push(skill.name);
+  }
 
+  const candidateSkills = new Set<string>(jobMatchProfile.skills.map((s) => s.name));
   const matchedSkills = jdSkills.filter((s) => candidateSkills.has(s));
   const missingSkills = jdSkills.filter((s) => !candidateSkills.has(s));
 
-  const titleBonus = jobMatchProfile.titles.some((t) => jd.includes(normalize(t))) ? 8 : 0;
+  const projectResults = projects
+    .map((project) => {
+      let score = 0;
+      for (const skill of project.skills) {
+        if (jd.includes(skill)) score += 2;
+      }
+      return {
+        name: project.name,
+        relevance: score,
+        reason: `${project.role === "qa" ? "QA" : project.role === "development" ? "Development" : "QA + Dev"} experience relevant to role requirements`,
+        url: project.url,
+      };
+    })
+    .filter((p) => p.relevance > 0)
+    .sort((a, b) => b.relevance - a.relevance)
+    .slice(0, 3);
 
-  const skillScore =
-    jdSkills.length > 0 ? (matchedSkills.length / jdSkills.length) * 55 : 25;
+  const expResults = experience
+    .map((item) => {
+      const text = normalize([item.title, item.company, ...item.highlights].join(" "));
+      let score = 0;
+      for (const skill of jobMatchProfile.skills) {
+        const jdHas = skill.keywords.some((k) => jd.includes(k));
+        const expHas = skill.keywords.some((k) => text.includes(k));
+        if (jdHas && expHas) score += 3;
+      }
+      if (item.current) score += 2;
+      return { title: item.title, company: item.company, relevance: score };
+    })
+    .filter((e) => e.relevance > 0)
+    .sort((a, b) => b.relevance - a.relevance)
+    .slice(0, 3);
 
-  const projectResults = scoreProjects(jd);
-  const projectScore = Math.min(projectResults.length * 8, 20);
-
-  const expResults = scoreExperience(jd);
-  const expScore = Math.min(expResults.length * 7, 17);
-
-  const roleFit = detectRoleFit(jd);
-  const roleBonus = roleFit === "hybrid" ? 5 : roleFit === "qa" ? 4 : 3;
-
-  const rawPercent = Math.round(skillScore + projectScore + expScore + titleBonus + roleBonus);
-  const matchPercent = Math.min(Math.max(rawPercent, 15), 98);
-
-  const summaryParts: string[] = [];
-
-  if (matchPercent >= 75) {
-    summaryParts.push(
-      `Strong match (${matchPercent}%) — Mubeen's ${roleFit === "qa" ? "SQA" : roleFit === "development" ? "development" : "SQA and development"} background aligns well with this role.`,
-    );
-  } else if (matchPercent >= 50) {
-    summaryParts.push(
-      `Moderate match (${matchPercent}%) — Several core requirements overlap with Mubeen's experience, with some gaps to note.`,
-    );
-  } else {
-    summaryParts.push(
-      `Partial match (${matchPercent}%) — Some relevant skills and project experience exist, but the role emphasizes areas outside the primary profile.`,
-    );
-  }
-
-  if (matchedSkills.length > 0) {
-    summaryParts.push(`Key matching skills: ${matchedSkills.slice(0, 5).join(", ")}.`);
-  }
-  if (missingSkills.length > 0) {
-    summaryParts.push(`Areas to discuss: ${missingSkills.slice(0, 3).join(", ")}.`);
-  }
+  const skillScore = jdSkills.length > 0 ? (matchedSkills.length / jdSkills.length) * 60 : 25;
+  const matchPercent = Math.min(90, Math.round(skillScore + projectResults.length * 8 + expResults.length * 5));
 
   return {
     matchPercent,
@@ -206,7 +164,8 @@ export function analyzeJobDescription(rawJd: string): MatchResult {
     missingSkills,
     relevantProjects: projectResults,
     relevantExperience: expResults,
-    roleFit,
-    summary: summaryParts.join(" "),
+    roleFit: "hybrid",
+    summary: `Estimated match: ${matchPercent}%. AI analysis unavailable — showing keyword-based estimate. Add OPENAI_API_KEY for full AI matching.`,
+    source: "fallback",
   };
 }

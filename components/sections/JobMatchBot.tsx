@@ -3,7 +3,7 @@
 import { GlassCard } from "@/components/ui/GlassCard";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeader } from "@/components/ui/SectionHeader";
-import { analyzeJobDescription, type MatchResult } from "@/lib/jobMatch";
+import { type MatchResult } from "@/lib/jobMatch";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useState } from "react";
@@ -48,17 +48,28 @@ function MatchRing({ percent }: { percent: number }) {
   );
 }
 
-function ResultPanel({ result }: { result: MatchResult }) {
-  if (result.matchPercent === 0 && result.matchedSkills.length === 0) {
-    return (
-      <p className="text-center text-muted">{result.summary}</p>
-    );
+function ResultPanel({ result, warning }: { result: MatchResult; warning?: string }) {
+  if (result.matchPercent === 0 && result.matchedSkills.length === 0 && !result.summary) {
+    return <p className="text-center text-muted">{result.summary || "No analysis available."}</p>;
   }
 
   return (
     <div className="space-y-6">
       <MatchRing percent={result.matchPercent} />
+
+      {result.source === "ai" ? (
+        <p className="text-center text-xs font-medium uppercase tracking-wider text-emerald-400/80">
+          AI-powered analysis
+        </p>
+      ) : null}
+
       <p className="text-center text-sm leading-relaxed text-muted">{result.summary}</p>
+
+      {warning ? (
+        <p className="rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-center text-xs text-amber-200">
+          {warning}
+        </p>
+      ) : null}
 
       {result.matchedSkills.length > 0 ? (
         <div>
@@ -139,11 +150,38 @@ function ResultPanel({ result }: { result: MatchResult }) {
 export function JobMatchBot() {
   const [jd, setJd] = useState("");
   const [result, setResult] = useState<MatchResult | null>(null);
-  const [analyzed, setAnalyzed] = useState(false);
+  const [warning, setWarning] = useState<string | undefined>();
+  const [status, setStatus] = useState<"idle" | "loading" | "done" | "error">("idle");
+  const [errorMessage, setErrorMessage] = useState("");
 
-  function handleAnalyze() {
-    setResult(analyzeJobDescription(jd));
-    setAnalyzed(true);
+  async function handleAnalyze() {
+    setStatus("loading");
+    setErrorMessage("");
+    setWarning(undefined);
+    setResult(null);
+
+    try {
+      const response = await fetch("/api/job-match", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ jobDescription: jd }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error ?? "Analysis failed. Please try again.");
+      }
+
+      setResult(data as MatchResult);
+      if (typeof data.warning === "string") setWarning(data.warning);
+      setStatus("done");
+    } catch (error) {
+      setStatus("error");
+      setErrorMessage(
+        error instanceof Error ? error.message : "Something went wrong. Please try again.",
+      );
+    }
   }
 
   return (
@@ -157,7 +195,7 @@ export function JobMatchBot() {
           id="job-match"
           label="AI Job Match"
           title="How well do I fit your role?"
-          description="Paste a job description below. The bot compares it against my skills, projects, and experience — instantly."
+          description="Paste a job description — GPT analyzes it against my real skills, projects, and experience for an honest match score."
         />
 
         <div className="grid gap-8 lg:grid-cols-2">
@@ -171,7 +209,7 @@ export function JobMatchBot() {
                 value={jd}
                 onChange={(e) => {
                   setJd(e.target.value);
-                  setAnalyzed(false);
+                  if (status === "done") setStatus("idle");
                 }}
                 rows={14}
                 className="input-field resize-y font-mono text-sm leading-relaxed"
@@ -180,13 +218,20 @@ export function JobMatchBot() {
               <button
                 type="button"
                 onClick={handleAnalyze}
-                disabled={jd.trim().length < 30}
+                disabled={jd.trim().length < 30 || status === "loading"}
                 className="mt-4 inline-flex min-h-11 items-center justify-center rounded-full bg-accent px-6 py-2.5 text-sm font-medium text-background transition-colors hover:bg-accent/90 disabled:opacity-50"
               >
-                Analyze Match
+                {status === "loading" ? (
+                  <span className="flex items-center gap-2">
+                    <span className="h-4 w-4 animate-spin rounded-full border-2 border-background/30 border-t-background" />
+                    Analyzing with AI...
+                  </span>
+                ) : (
+                  "Analyze Match"
+                )}
               </button>
               <p className="mt-3 text-xs text-muted">
-                Runs locally in your browser — no data is sent to any server.
+                Powered by OpenAI — compares your JD against my full resume profile.
               </p>
             </GlassCard>
           </Reveal>
@@ -196,19 +241,32 @@ export function JobMatchBot() {
               <h3 className="font-display text-lg font-semibold text-foreground">
                 Match analysis
               </h3>
-              {!analyzed || !result ? (
+
+              {status === "loading" ? (
+                <div className="mt-12 flex flex-col items-center justify-center text-center text-muted">
+                  <span className="mb-4 h-10 w-10 animate-spin rounded-full border-2 border-accent/20 border-t-accent" />
+                  <p className="max-w-xs text-sm">
+                    AI is reading the job description and comparing it with my skills,
+                    NamiPay/SSPA QA work, Laravel projects, and experience...
+                  </p>
+                </div>
+              ) : status === "error" ? (
+                <p className="mt-8 text-center text-sm text-red-400" role="alert">
+                  {errorMessage}
+                </p>
+              ) : status !== "done" || !result ? (
                 <div className="mt-8 flex flex-col items-center justify-center text-center text-muted">
                   <span className="mb-4 text-4xl opacity-40" aria-hidden>
                     🤖
                   </span>
                   <p className="max-w-xs text-sm">
-                    Paste a job description and click Analyze Match to see compatibility,
-                    matching skills, and relevant projects.
+                    Paste a job description and click Analyze Match to get an AI-powered
+                    compatibility score with matched skills and relevant projects.
                   </p>
                 </div>
               ) : (
                 <div className="mt-6">
-                  <ResultPanel result={result} />
+                  <ResultPanel result={result} warning={warning} />
                 </div>
               )}
             </GlassCard>

@@ -15,11 +15,14 @@ npm install
 cp .env.local.example .env.local
 ```
 
-Add your [Formspree](https://formspree.io) endpoint to `.env.local`:
+Copy `.env.local.example` to `.env.local` and fill in:
 
 ```
 NEXT_PUBLIC_FORM_ENDPOINT=https://formspree.io/f/YOUR_FORM_ID
+OPENAI_API_KEY=sk-your-openai-api-key
 ```
+
+`OPENAI_API_KEY` powers the **AI Job Match** bot (GPT compares job descriptions against your real profile). On Netlify, add it under **Site settings → Environment variables**.
 
 Place your resume at `public/Mubeen-Qazi-Resume.pdf`.
 
