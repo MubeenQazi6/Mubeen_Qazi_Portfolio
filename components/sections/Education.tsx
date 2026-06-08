@@ -2,6 +2,7 @@ import { GlassCard } from "@/components/ui/GlassCard";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { education } from "@/content/portfolio";
+import Link from "next/link";
 
 export function Education() {
   return (
@@ -23,9 +24,17 @@ export function Education() {
               {education.period}
             </p>
             <h3 className="mt-2 font-display text-2xl font-semibold text-foreground">
-              {education.institution}
+              <Link
+                href={education.institutionUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="transition-colors hover:text-accent"
+              >
+                {education.institution}
+              </Link>
             </h3>
             <p className="mt-2 text-lg text-muted">{education.degree}</p>
+            <p className="mt-1 text-sm text-muted">{education.location}</p>
           </GlassCard>
         </Reveal>
       </div>

@@ -16,7 +16,7 @@ export function Skills() {
           id="skills"
           label="Skills"
           title="Tools I use every day"
-          description="Grouped by QA, development, and collaboration."
+          description="QA skills front and center — plus the development stack behind my testing expertise."
         />
 
         <div className="grid gap-6 md:grid-cols-3">

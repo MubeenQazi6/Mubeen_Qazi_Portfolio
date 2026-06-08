@@ -202,7 +202,7 @@ export function Contact() {
                       "text-foreground transition-colors hover:text-accent",
                     )}
                   >
-                    linkedin.com/in/mubeen-qazi
+                    Connect on LinkedIn
                   </Link>
                 </li>
                 <li>

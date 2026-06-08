@@ -1,5 +1,6 @@
 import { type ProjectItem } from "@/content/portfolio";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 const cardClassName = cn(
   "group rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl transition-all duration-300",
@@ -14,8 +15,29 @@ export function ProjectCard({ project }: { project: ProjectItem }) {
         {project.category}
       </p>
       <h3 className="mt-2 font-display text-xl font-semibold text-foreground">
-        {project.name}
+        {project.url ? (
+          <Link
+            href={project.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 transition-colors hover:text-accent"
+          >
+            {project.name}
+            <span className="text-sm opacity-60" aria-hidden>
+              ↗
+            </span>
+          </Link>
+        ) : (
+          project.name
+        )}
       </h3>
+      <p className="mt-1 text-xs text-muted">
+        {project.role === "qa"
+          ? "QA & Testing"
+          : project.role === "development"
+            ? "Software Development"
+            : "QA & Development"}
+      </p>
       <ul className="mt-4 space-y-2">
         {project.highlights.map((item) => (
           <li

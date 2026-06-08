@@ -1,5 +1,6 @@
 import { type ExperienceItem } from "@/content/portfolio";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 export function TimelineItem({ item }: { item: ExperienceItem }) {
   return (
@@ -18,10 +19,26 @@ export function TimelineItem({ item }: { item: ExperienceItem }) {
           <h3 className="font-display text-lg font-semibold text-foreground">
             {item.title}
           </h3>
-          <span className="text-accent">— {item.company}</span>
+          <span className="text-accent">
+            —{" "}
+            {item.companyUrl ? (
+              <Link
+                href={item.companyUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="transition-colors hover:text-foreground hover:underline"
+              >
+                {item.company}
+              </Link>
+            ) : (
+              item.company
+            )}
+          </span>
         </div>
-        {item.period ? (
-          <p className="text-sm font-medium text-muted">{item.period}</p>
+        {item.period || item.location ? (
+          <p className="text-sm font-medium text-muted">
+            {[item.period, item.location].filter(Boolean).join(" · ")}
+          </p>
         ) : null}
         <ul className="mt-3 space-y-2 text-muted">
           {item.highlights.map((point) => (

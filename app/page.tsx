@@ -8,6 +8,7 @@ import { Contact } from "@/components/sections/Contact";
 import { Education } from "@/components/sections/Education";
 import { Experience } from "@/components/sections/Experience";
 import { Hero } from "@/components/sections/Hero";
+import { JobMatchBot } from "@/components/sections/JobMatchBot";
 import { Projects } from "@/components/sections/Projects";
 import { Skills } from "@/components/sections/Skills";
 
@@ -21,6 +22,7 @@ export default function Home() {
         <Skills />
         <Experience />
         <Projects />
+        <JobMatchBot />
         <Education />
         <Certifications />
         <Contact />

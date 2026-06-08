@@ -1,7 +1,8 @@
 [build]
   command = "npm run build"
-  publish = ".next"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
 
 [build.environment]
   NEXT_PUBLIC_FORM_ENDPOINT = "https://formspree.io/f/mbdejebz"
-

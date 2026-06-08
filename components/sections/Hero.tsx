@@ -35,6 +35,8 @@ export function Hero() {
 
         <p className="hero-animate hero-animate-delay-2 mt-4 font-display text-xl font-semibold text-foreground/90 sm:text-2xl md:text-3xl">
           {personal.role}
+          <span className="text-muted"> & </span>
+          <span className="text-accent">{personal.roleSecondary}</span>
         </p>
 
         <div className="hero-animate hero-animate-delay-3 mt-6 flex flex-wrap gap-2">
@@ -48,14 +50,17 @@ export function Hero() {
           ))}
         </div>
 
-        <p className="hero-animate hero-animate-delay-3 mt-8 max-w-xl text-lg text-muted">
-          Building quality into fintech and government systems through API,
-          performance, and functional testing — with a strong foundation in
-          Laravel and modern web development.
+        <p className="hero-animate hero-animate-delay-3 mt-8 max-w-2xl text-lg text-muted">
+          Currently focused on SQA for fintech and government platforms — API,
+          performance, and functional testing with Postman & JMeter. Also bring
+          hands-on Laravel, PHP, and full-stack development from real projects.
         </p>
 
-        <div className="hero-animate hero-animate-delay-4 mt-10 flex flex-col gap-3 sm:flex-row sm:items-center">
-          <Link href="#projects" className={primaryLinkClass}>
+        <div className="hero-animate hero-animate-delay-4 mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+          <Link href="#job-match" className={primaryLinkClass}>
+            Check Job Match
+          </Link>
+          <Link href="#projects" className={secondaryLinkClass}>
             View Projects
           </Link>
           <Link href="#contact" className={secondaryLinkClass}>

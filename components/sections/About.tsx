@@ -14,8 +14,8 @@ export function About() {
         <SectionHeader
           id="about"
           label="About"
-          title="Quality-first engineer"
-          description="Focused on reliable software across regulated and high-traffic environments."
+          title="SQA Engineer & Software Developer"
+          description="Testing-first today, with a solid development foundation from Laravel and full-stack projects."
         />
 
         <div className="grid gap-8 lg:grid-cols-2">

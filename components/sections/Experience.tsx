@@ -16,7 +16,7 @@ export function Experience() {
           id="experience"
           label="Experience"
           title="Professional journey"
-          description="Hands-on QA and development across fintech, government, and product teams."
+          description="SQA work highlighted first — backed by Laravel, PHP, and frontend development experience."
         />
 
         <Reveal>

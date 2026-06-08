@@ -2,6 +2,7 @@ import { GlassCard } from "@/components/ui/GlassCard";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { certifications } from "@/content/portfolio";
+import Link from "next/link";
 
 export function Certifications() {
   return (
@@ -19,19 +20,32 @@ export function Certifications() {
 
         <Reveal>
           <GlassCard>
-            <ul className="space-y-4">
+            <ul className="space-y-5">
               {certifications.map((cert) => (
                 <li
-                  key={cert}
-                  className="flex items-center gap-4 text-lg text-foreground/90"
+                  key={cert.name}
+                  className="flex items-start gap-4 text-foreground/90"
                 >
                   <span
-                    className="flex h-10 w-10 items-center justify-center rounded-full border border-accent/30 bg-accent/10 text-accent"
+                    className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-accent/30 bg-accent/10 text-accent"
                     aria-hidden
                   >
                     ✓
                   </span>
-                  {cert}
+                  <div>
+                    <p className="text-lg font-medium text-foreground">{cert.name}</p>
+                    <p className="text-sm text-muted">
+                      <Link
+                        href={cert.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="transition-colors hover:text-accent"
+                      >
+                        {cert.issuer}
+                      </Link>
+                      {cert.period ? ` · ${cert.period}` : null}
+                    </p>
+                  </div>
                 </li>
               ))}
             </ul>
