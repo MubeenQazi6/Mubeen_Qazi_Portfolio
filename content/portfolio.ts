@@ -219,7 +219,7 @@ export const projects: ProjectItem[] = [
 ];
 
 export const education = {
-  institution: "ISRA University Hyderabad",
+  institution: "Isra University, Hyderabad",
   institutionUrl: "https://isra.edu.pk/",
   degree: "Bachelor of Software Engineering",
   period: "Jan 2022 – Dec 2025",

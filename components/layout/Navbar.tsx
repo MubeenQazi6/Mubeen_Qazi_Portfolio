@@ -21,7 +21,6 @@ export function Navbar() {
   useEffect(() => {
     const onScroll = () => {
       setScrolled(window.scrollY > 16);
-      if (open) closeMenu();
     };
 
     onScroll();
@@ -95,7 +94,7 @@ export function Navbar() {
               </span>
             </span>
             <span className="hidden font-display text-sm font-medium tracking-wide text-muted transition-colors group-hover:text-foreground sm:block">
-              Mubeen<span className="text-accent">.</span>Qazi
+              Mubeen <span className="text-accent">Qazi</span>
             </span>
           </Link>
 
