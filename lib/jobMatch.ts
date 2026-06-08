@@ -165,7 +165,7 @@ export function analyzeJobDescriptionFallback(rawJd: string): MatchResult {
     relevantProjects: projectResults,
     relevantExperience: expResults,
     roleFit: "hybrid",
-    summary: `Estimated match: ${matchPercent}%. AI analysis unavailable — showing keyword-based estimate. Add OPENAI_API_KEY for full AI matching.`,
+    summary: `Estimated match: ${matchPercent}%. Review matched skills and relevant experience below.`,
     source: "fallback",
   };
 }

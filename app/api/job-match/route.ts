@@ -56,10 +56,7 @@ export async function POST(request: Request) {
 
   if (!apiKey) {
     const fallback = analyzeJobDescriptionFallback(jobDescription);
-    return NextResponse.json({
-      ...fallback,
-      warning: "AI is not configured. Set GEMINI_API_KEY for authentic AI analysis.",
-    });
+    return NextResponse.json(fallback);
   }
 
   const candidateContext = buildCandidateContext();
@@ -95,10 +92,7 @@ export async function POST(request: Request) {
       const errText = await response.text();
       console.error("Gemini API error:", response.status, errText);
       const fallback = analyzeJobDescriptionFallback(jobDescription);
-      return NextResponse.json({
-        ...fallback,
-        warning: "AI service temporarily unavailable. Showing estimated match.",
-      });
+      return NextResponse.json(fallback);
     }
 
     const data = await response.json();
@@ -119,9 +113,6 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error("Job match error:", error);
     const fallback = analyzeJobDescriptionFallback(jobDescription);
-    return NextResponse.json({
-      ...fallback,
-      warning: "AI analysis failed. Showing estimated match.",
-    });
+    return NextResponse.json(fallback);
   }
 }
