@@ -195,7 +195,7 @@ export function JobMatchBot() {
           id="job-match"
           label="AI Job Match"
           title="How well do I fit your role?"
-          description="Paste a job description — GPT analyzes it against my real skills, projects, and experience for an honest match score."
+          description="Paste a job description — Google Gemini analyzes it against my real skills, projects, and experience for an honest match score."
         />
 
         <div className="grid gap-8 lg:grid-cols-2">
@@ -231,7 +231,7 @@ export function JobMatchBot() {
                 )}
               </button>
               <p className="mt-3 text-xs text-muted">
-                Powered by Google Gemini — compares your JD against my full resume profile.
+                Powered by Google Gemini — compares the job description against my full resume profile.
               </p>
             </GlassCard>
           </Reveal>
