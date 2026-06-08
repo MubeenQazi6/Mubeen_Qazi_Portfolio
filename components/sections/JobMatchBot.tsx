@@ -59,7 +59,7 @@ function ResultPanel({ result, warning }: { result: MatchResult; warning?: strin
 
       {result.source === "ai" ? (
         <p className="text-center text-xs font-medium uppercase tracking-wider text-emerald-400/80">
-          AI-powered analysis
+          Smart Match Analysis
         </p>
       ) : null}
 
@@ -193,9 +193,9 @@ export function JobMatchBot() {
       <div className="mx-auto max-w-6xl px-6 md:px-8">
         <SectionHeader
           id="job-match"
-          label="AI Job Match"
+          label="Profile Matcher"
           title="How well do I fit your role?"
-          description="Paste a job description — Google Gemini analyzes it against my real skills, projects, and experience for an honest match score."
+          description="Paste a job description — my matching engine analyzes it against my real skills, projects, and experience for an honest match score."
         />
 
         <div className="grid gap-8 lg:grid-cols-2">
@@ -224,14 +224,14 @@ export function JobMatchBot() {
                 {status === "loading" ? (
                   <span className="flex items-center gap-2">
                     <span className="h-4 w-4 animate-spin rounded-full border-2 border-background/30 border-t-background" />
-                    Analyzing with AI...
+                    Analyzing profile match...
                   </span>
                 ) : (
                   "Analyze Match"
                 )}
               </button>
               <p className="mt-3 text-xs text-muted">
-                Powered by Google Gemini — compares the job description against my full resume profile.
+                Advanced Context Matching — compares the job description against my full resume profile.
               </p>
             </GlassCard>
           </Reveal>
@@ -246,7 +246,7 @@ export function JobMatchBot() {
                 <div className="mt-12 flex flex-col items-center justify-center text-center text-muted">
                   <span className="mb-4 h-10 w-10 animate-spin rounded-full border-2 border-accent/20 border-t-accent" />
                   <p className="max-w-xs text-sm">
-                    AI is reading the job description and comparing it with my skills,
+                    Processing the job description and comparing it with my skills,
                     NamiPay/SSPA QA work, Laravel projects, and experience...
                   </p>
                 </div>
@@ -260,7 +260,7 @@ export function JobMatchBot() {
                     🤖
                   </span>
                   <p className="max-w-xs text-sm">
-                    Paste a job description and click Analyze Match to get an AI-powered
+                    Paste a job description and click Analyze Match to get a detailed
                     compatibility score with matched skills and relevant projects.
                   </p>
                 </div>
