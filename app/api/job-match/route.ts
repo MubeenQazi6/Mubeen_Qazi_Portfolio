@@ -52,42 +52,48 @@ export async function POST(request: Request) {
     );
   }
 
-  const apiKey = process.env.OPENAI_API_KEY;
+  const apiKey = process.env.GEMINI_API_KEY;
 
   if (!apiKey) {
     const fallback = analyzeJobDescriptionFallback(jobDescription);
     return NextResponse.json({
       ...fallback,
-      warning: "AI is not configured. Set OPENAI_API_KEY for authentic AI analysis.",
+      warning: "AI is not configured. Set GEMINI_API_KEY for authentic AI analysis.",
     });
   }
 
   const candidateContext = buildCandidateContext();
 
   try {
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: process.env.OPENAI_MODEL ?? "gpt-4o-mini",
-        temperature: 0.2,
-        response_format: { type: "json_object" },
-        messages: [
-          { role: "system", content: SYSTEM_PROMPT },
+        systemInstruction: {
+          parts: [{ text: SYSTEM_PROMPT }]
+        },
+        contents: [
           {
             role: "user",
-            content: `CANDIDATE PROFILE:\n${candidateContext}\n\n---\n\nJOB DESCRIPTION:\n${jobDescription}`,
-          },
+            parts: [
+              {
+                text: `CANDIDATE PROFILE:\n${candidateContext}\n\n---\n\nJOB DESCRIPTION:\n${jobDescription}`
+              }
+            ]
+          }
         ],
+        generationConfig: {
+          temperature: 0.2,
+          responseMimeType: "application/json"
+        }
       }),
     });
 
     if (!response.ok) {
       const errText = await response.text();
-      console.error("OpenAI API error:", response.status, errText);
+      console.error("Gemini API error:", response.status, errText);
       const fallback = analyzeJobDescriptionFallback(jobDescription);
       return NextResponse.json({
         ...fallback,
@@ -96,7 +102,7 @@ export async function POST(request: Request) {
     }
 
     const data = await response.json();
-    const content = data.choices?.[0]?.message?.content;
+    const content = data.candidates?.[0]?.content?.parts?.[0]?.text;
 
     if (!content || typeof content !== "string") {
       throw new Error("Empty AI response");

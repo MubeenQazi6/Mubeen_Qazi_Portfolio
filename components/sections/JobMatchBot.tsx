@@ -231,7 +231,7 @@ export function JobMatchBot() {
                 )}
               </button>
               <p className="mt-3 text-xs text-muted">
-                Powered by OpenAI — compares your JD against my full resume profile.
+                Powered by Google Gemini — compares your JD against my full resume profile.
               </p>
             </GlassCard>
           </Reveal>
