@@ -75,8 +75,8 @@ export function Navbar() {
         className={cn(
           "fixed inset-x-0 top-0 z-50 transition-all duration-300",
           scrolled || open
-            ? "border-b border-white/10 bg-background/90 shadow-[0_4px_24px_rgba(0,0,0,0.35)] backdrop-blur-xl"
-            : "bg-background/40 backdrop-blur-md md:bg-transparent md:backdrop-blur-none",
+            ? "border-b border-accent/30 bg-background/80 shadow-[0_4px_30px_rgba(34,197,94,0.15)] backdrop-blur-xl"
+            : "bg-background/20 backdrop-blur-md md:bg-transparent md:backdrop-blur-none",
         )}
       >
         <nav
@@ -88,7 +88,7 @@ export function Navbar() {
             className="group relative z-50 flex items-center gap-2"
             onClick={closeMenu}
           >
-            <span className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-accent via-[#8b5cf6] to-accent shadow-lg shadow-accent/20 transition-shadow duration-300 group-hover:shadow-accent/40">
+            <span className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-accent via-[#3b82f6] to-[#8b5cf6] shadow-[0_0_15px_rgba(34,197,94,0.4)] transition-shadow duration-300 group-hover:shadow-[0_0_25px_rgba(34,197,94,0.6)]">
               <span className="font-display text-lg font-bold tracking-tight text-background">
                 MQ
               </span>

@@ -3,14 +3,14 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 
 const cardClassName = cn(
-  "group rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl transition-all duration-300",
-  "hover:-translate-y-1.5 hover:scale-[1.01] hover:border-accent/40 hover:bg-white/[0.07]",
-  "hover:shadow-[0_8px_40px_rgba(56,189,248,0.12)]",
+  "group relative overflow-hidden glass-card-3d rounded-2xl p-6 transition-all duration-500",
+  "hover:-translate-y-2 hover:scale-[1.02]",
 );
 
 export function ProjectCard({ project }: { project: ProjectItem }) {
   return (
     <div className={cardClassName}>
+      <div className="card-shine" aria-hidden />
       <p className="text-xs font-medium uppercase tracking-wider text-accent">
         {project.category}
       </p>

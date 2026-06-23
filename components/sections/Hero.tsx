@@ -6,10 +6,10 @@ import Link from "next/link";
 const tags = personal.subtitle.split("|").map((t) => t.trim());
 
 const primaryLinkClass =
-  "inline-flex min-h-11 items-center justify-center rounded-full bg-accent px-6 py-2.5 text-sm font-medium text-background transition-colors hover:bg-accent/90";
+  "inline-flex min-h-11 items-center justify-center rounded-full bg-accent px-6 py-2.5 text-sm font-medium text-background transition-all hover:bg-accent/90 hover:shadow-[0_0_20px_rgba(34,197,94,0.4)] hover:-translate-y-0.5";
 
 const secondaryLinkClass =
-  "inline-flex min-h-11 items-center justify-center rounded-full border border-white/15 bg-white/5 px-6 py-2.5 text-sm font-medium transition-colors hover:border-accent/50 hover:bg-white/10";
+  "inline-flex min-h-11 items-center justify-center rounded-full border border-white/15 bg-white/5 px-6 py-2.5 text-sm font-medium transition-all hover:border-accent/50 hover:bg-white/10 hover:shadow-[0_0_15px_rgba(59,130,246,0.2)] hover:-translate-y-0.5";
 
 export function Hero() {
   return (
@@ -43,7 +43,7 @@ export function Hero() {
           {tags.map((tag) => (
             <span
               key={tag}
-              className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-sm text-muted backdrop-blur-sm"
+              className="rounded-full border border-accent/20 bg-accent/5 px-3 py-1 font-mono text-xs text-accent/90 backdrop-blur-sm transition-colors hover:bg-accent/10"
             >
               {tag}
             </span>
@@ -69,7 +69,7 @@ export function Hero() {
           <Link
             href={personal.resumePath}
             download
-            className="inline-flex min-h-11 items-center justify-center px-6 py-2.5 text-sm text-muted hover:text-foreground"
+            className="inline-flex min-h-11 items-center justify-center px-6 py-2.5 font-mono text-sm tracking-wide text-muted transition-colors hover:text-accent"
           >
             Download Resume ↓
           </Link>

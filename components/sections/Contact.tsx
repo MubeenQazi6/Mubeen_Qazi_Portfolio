@@ -129,7 +129,7 @@ export function Contact() {
                 <button
                   type="submit"
                   disabled={status === "submitting"}
-                  className="inline-flex min-h-11 items-center justify-center rounded-full bg-accent px-6 py-2.5 text-sm font-medium text-background transition-colors hover:bg-accent/90 disabled:opacity-60"
+                  className="inline-flex min-h-11 items-center justify-center rounded-xl bg-accent px-6 py-2.5 text-sm font-medium text-background transition-all hover:bg-accent/90 hover:shadow-[0_0_20px_rgba(34,197,94,0.4)] disabled:opacity-60"
                 >
                   {status === "submitting" ? "Sending..." : "Send Message"}
                 </button>

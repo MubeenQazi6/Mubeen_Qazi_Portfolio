@@ -1,6 +1,6 @@
 import { seo } from "@/content/portfolio";
 import type { Metadata } from "next";
-import { Inter, Poppins } from "next/font/google";
+import { Inter, Poppins, JetBrains_Mono } from "next/font/google";
 import { WhatsAppButton } from "@/components/ui/WhatsAppButton";
 import "./globals.css";
 
@@ -14,6 +14,12 @@ const poppins = Poppins({
   variable: "--font-poppins",
   subsets: ["latin"],
   weight: ["500", "600", "700"],
+  display: "swap",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-mono",
+  subsets: ["latin"],
   display: "swap",
 });
 
@@ -48,7 +54,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${poppins.variable} scroll-smooth`}>
+    <html lang="en" className={`${inter.variable} ${poppins.variable} ${jetbrainsMono.variable} scroll-smooth`}>
       <body className="min-h-screen bg-background font-sans text-foreground antialiased">
         {children}
         <WhatsAppButton />

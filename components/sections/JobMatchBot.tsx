@@ -219,7 +219,7 @@ export function JobMatchBot() {
                 type="button"
                 onClick={handleAnalyze}
                 disabled={jd.trim().length < 30 || status === "loading"}
-                className="mt-4 inline-flex min-h-11 items-center justify-center rounded-full bg-accent px-6 py-2.5 text-sm font-medium text-background transition-colors hover:bg-accent/90 disabled:opacity-50"
+                className="mt-4 inline-flex min-h-11 w-full items-center justify-center rounded-xl bg-accent px-6 py-2.5 text-sm font-medium text-background transition-all hover:bg-accent/90 hover:shadow-[0_0_20px_rgba(34,197,94,0.4)] disabled:opacity-50"
               >
                 {status === "loading" ? (
                   <span className="flex items-center gap-2">

@@ -1,11 +1,14 @@
 @import "tailwindcss";
 
 :root {
-  --background: #050508;
-  --foreground: #f4f4f5;
-  --muted: #a1a1aa;
-  --accent: #38bdf8;
-  --accent-violet: #8b5cf6;
+  /* OLED Optimized Dark Mode */
+  --background: #000000;
+  --foreground: #f8fafc;
+  --muted: #8b9eb5;
+  --accent: #22c55e; /* Emerald Green */
+  --accent-violet: #3b82f6; /* Electric Blue */
+  --card-bg: rgba(10, 14, 39, 0.4);
+  --card-border: rgba(59, 130, 246, 0.15);
 }
 
 @theme inline {
@@ -15,10 +18,14 @@
   --color-accent: var(--accent);
   --font-sans: var(--font-inter);
   --font-display: var(--font-poppins);
+  --font-mono: var(--font-mono);
 }
 
 html {
   scroll-behavior: smooth;
+  /* OLED Optimization */
+  background: var(--background);
+  color-scheme: dark;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -31,6 +38,8 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-inter), system-ui, sans-serif;
+  overflow-x: hidden;
+  perspective: 1000px;
 }
 
 .section-padding {
@@ -45,96 +54,122 @@ body {
   }
 }
 
+/* 5D Backgrounds */
 .hero-glow {
   background:
-    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(56, 189, 248, 0.15), transparent),
-    radial-gradient(ellipse 60% 40% at 100% 0%, rgba(139, 92, 246, 0.1), transparent),
-    radial-gradient(ellipse 50% 30% at 0% 50%, rgba(56, 189, 248, 0.08), transparent);
+    radial-gradient(ellipse 60% 50% at 50% 0%, rgba(34, 197, 94, 0.15), transparent),
+    radial-gradient(ellipse 70% 60% at 100% 20%, rgba(59, 130, 246, 0.12), transparent),
+    radial-gradient(ellipse 40% 40% at 0% 80%, rgba(139, 92, 246, 0.1), transparent);
+  filter: blur(40px);
 }
 
 .hero-grid {
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-  background-size: 64px 64px;
-  mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black, transparent);
+  background-image: 
+    linear-gradient(rgba(59, 130, 246, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(59, 130, 246, 0.08) 1px, transparent 1px);
+  background-size: 60px 60px;
+  background-position: center center;
+  transform: perspective(500px) rotateX(60deg) translateY(-100px) translateZ(-200px);
+  transform-origin: top center;
+  mask-image: radial-gradient(ellipse 100% 100% at 50% 10%, black 20%, transparent 80%);
+  animation: gridMove 20s linear infinite;
+  opacity: 0.6;
+}
+
+@keyframes gridMove {
+  0% {
+    transform: perspective(500px) rotateX(60deg) translateY(-100px) translateZ(-200px);
+  }
+  100% {
+    transform: perspective(500px) rotateX(60deg) translateY(20px) translateZ(-200px);
+  }
+}
+
+/* 3D Glass Cards */
+.glass-card-3d {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  box-shadow: 
+    0 10px 30px -10px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transform-style: preserve-3d;
+}
+
+.glass-card-3d:hover {
+  border-color: rgba(34, 197, 94, 0.4);
+  box-shadow: 
+    0 20px 40px -10px rgba(0, 0, 0, 0.7),
+    0 0 20px rgba(34, 197, 94, 0.15),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.2);
 }
 
 .input-field {
   width: 100%;
   border-radius: 0.75rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--card-border);
+  background: rgba(10, 14, 39, 0.6);
   padding: 0.75rem 1rem;
   color: var(--foreground);
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition: all 0.3s ease;
+  font-family: var(--font-mono), monospace;
 }
 
 .input-field::placeholder {
   color: var(--muted);
+  font-family: var(--font-sans), sans-serif;
 }
 
 .input-field:focus {
   outline: none;
-  border-color: rgba(56, 189, 248, 0.5);
-  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2), inset 0 0 10px rgba(34, 197, 94, 0.05);
+  background: rgba(10, 14, 39, 0.8);
 }
 
+/* Reveals with 3D depth */
 .reveal {
   opacity: 0;
-  transform: translateY(24px);
-  transition:
-    opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  transform: translateY(30px) translateZ(-50px) rotateX(-10deg);
+  transition: 
+    opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  transform-style: preserve-3d;
 }
 
 .reveal--visible {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateY(0) translateZ(0) rotateX(0);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .reveal {
-    opacity: 1;
+  .reveal, .hero-animate, .hero-grid {
+    animation: none;
     transform: none;
     transition: none;
+    opacity: 1;
   }
 }
 
 .hero-animate {
-  animation: heroFadeUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: heroFadeUp3D 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-.hero-animate-delay-1 {
-  animation-delay: 0.1s;
-}
+.hero-animate-delay-1 { animation-delay: 0.1s; }
+.hero-animate-delay-2 { animation-delay: 0.2s; }
+.hero-animate-delay-3 { animation-delay: 0.3s; }
+.hero-animate-delay-4 { animation-delay: 0.4s; }
 
-.hero-animate-delay-2 {
-  animation-delay: 0.2s;
-}
-
-.hero-animate-delay-3 {
-  animation-delay: 0.3s;
-}
-
-.hero-animate-delay-4 {
-  animation-delay: 0.4s;
-}
-
-@keyframes heroFadeUp {
+@keyframes heroFadeUp3D {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(40px) translateZ(-100px) rotateX(-15deg);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hero-animate {
-    animation: none;
+    transform: translateY(0) translateZ(0) rotateX(0);
   }
 }
 
@@ -147,4 +182,29 @@ body {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* Project Card Shine Effect */
+.card-shine {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 20%,
+    rgba(255, 255, 255, 0.05) 25%,
+    transparent 30%
+  );
+  background-size: 200% 100%;
+  background-position: 100% 0;
+  transition: background-position 0.6s ease-out;
+  pointer-events: none;
+  border-radius: inherit;
+  z-index: 10;
+}
+
+.group:hover .card-shine {
+  background-position: -100% 0;
 }
