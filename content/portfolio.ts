@@ -178,6 +178,24 @@ export const projects: ProjectItem[] = [
     ],
   },
   {
+    name: "SLADP — Sindh Livestock & Aquaculture Development Project",
+    category: "Mobile Application",
+    url: "https://www.facebook.com/p/Sindh-Livestock-Aquaculture-Development-Project-61577857663559/",
+    role: "qa",
+    skills: [
+      "manual testing",
+      "functional testing",
+      "ui testing",
+      "defect reporting",
+      "mobile app testing",
+    ],
+    highlights: [
+      "Tested a mobile application manually, covering functional and UI testing across core app screens and workflows",
+      "Verified UI consistency, layout behavior, and navigation flows to ensure a smooth and reliable user experience",
+      "Identified, documented, and reported functional and UI defects to support timely fixes and quality improvement",
+    ],
+  },
+  {
     name: "Workflow Management System",
     category: "Laravel / PHP / MySQL",
     role: "both",
