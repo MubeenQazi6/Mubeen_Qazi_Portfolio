@@ -7,7 +7,7 @@ export const personal = {
   phone: "+92 312 3001579",
   whatsApp: "https://wa.me/923123001579",
   linkedIn: "https://linkedin.com/in/mubeen-qazi",
-  subtitle: "SQA & API Testing | Laravel & Full-Stack Dev | Fintech & Government QA",
+  subtitle: "SQA, API & Mobile App Testing | Laravel & Full-Stack Dev | Fintech & Gov QA",
   resumePath: "/Mubeen-Qazi-Resume.pdf",
 } as const;
 
@@ -23,7 +23,7 @@ export const navLinks = [
 
 export const about = {
   summary:
-    "Detail-oriented Software Engineering graduate with hands-on experience in Software Quality Assurance and full-stack development. Currently focused on API testing, load & performance testing, UI/functional testing, and defect management across fintech and government platforms — with a strong foundation in Laravel, PHP, and MySQL from building real-world applications.",
+    "Detail-oriented Software Engineering graduate with hands-on experience in Software Quality Assurance and full-stack development. Currently focused on API testing, load & performance testing, UI/functional testing, and defect management across fintech, government, and mobile application platforms — with a strong foundation in Laravel, PHP, and MySQL from building real-world applications.",
   highlights: [
     "API Testing with Postman on NamiPay fintech platform",
     "Load & Performance Testing with JMeter",
@@ -39,6 +39,7 @@ export const skillGroups = [
     title: "QA & Testing",
     skills: [
       "API Testing (Postman)",
+      "Mobile App Testing",
       "Load & Performance (JMeter)",
       "UI & Functional Testing",
       "Test Case Design",
@@ -284,6 +285,7 @@ export const jobMatchProfile = {
     { name: "Postman", keywords: ["postman", "api client", "collection runner"] },
     { name: "JMeter", keywords: ["jmeter", "load testing", "performance testing", "stress test", "load test"] },
     { name: "Manual Testing", keywords: ["manual testing", "manual test", "functional testing", "ui testing", "ui test", "black box"] },
+    { name: "Mobile App Testing", keywords: ["mobile app", "mobile testing", "android", "ios", "apk", "mobile application"] },
     { name: "Regression Testing", keywords: ["regression", "regression testing", "retesting"] },
     { name: "Test Case Design", keywords: ["test case", "test plan", "test scenario", "test design", "test documentation"] },
     { name: "Jira", keywords: ["jira", "bug tracking", "defect tracking", "issue tracking", "agile", "scrum"] },
@@ -312,7 +314,7 @@ export const jobMatchProfile = {
 export const seo = {
   title: "Mubeen Qazi | SQA Engineer & Software Developer",
   description:
-    "Software Quality Assurance Engineer and Software Developer in Hyderabad, Pakistan. API testing with Postman, performance testing with JMeter, Laravel development, and QA for fintech and government systems.",
+    "Software Quality Assurance Engineer and Software Developer in Hyderabad, Pakistan. API testing with Postman, performance testing with JMeter, Laravel development, and QA for fintech, government, and mobile applications.",
   keywords: [
     "Software Quality Assurance",
     "SQA Engineer",
@@ -324,6 +326,7 @@ export const seo = {
     "PHP",
     "Hyderabad",
     "Fintech QA",
+    "Mobile App Testing",
   ],
   siteUrl: "https://mubeenqazi.dev",
 } as const;
